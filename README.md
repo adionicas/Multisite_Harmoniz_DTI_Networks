@@ -2,6 +2,45 @@
 
 
 
+```matlab
+mkdir no_diag_matrices_DTI
+mkdir DATA_BEFORE_COMBAT
+% make a list of files containing the matrices
+matrix_dir_files = dir('DTI_raw_FC/fc/sub-*_ses-B0_FP_sorted_GR_TV_MD_C_native_Tracts_DTI_FA_PASS.mat');
+folder_path = {matrix_dir_files.folder};
+matrix_files={matrix_dir_files.name};
+a=rand(90);
+idx_under_diag=find(tril(a,-1));
+for i = 1 : length(matrix_files)
+	i
+	W = importdata(folder_path{i} + "/" +  matrix_files{i});
+	W(isnan(W)) = 0;
+	W(1:size(W,1)+1:end)=0; % clear diagonal
+	% find indices below diag
+	% obtain a vector from the indices
+	vals_under_diag(i,:)=W(idx_under_diag);
+	sub_order{i} = [matrix_files{i}(5:12)];
+
+% save as txt
+	filename = ["no_diag_matrices_DTI/" + matrix_files{i}(1:12) + "_DTI_B0.txt"];
+	save(filename,'W')
+
+% save as .mat
+	filename = ["no_diag_matrices_DTI/" + matrix_files{i}(1:12) + "_DTI_B0"];
+	save(filename,'W')
+end;
+
+	filename = ["DATA_BEFORE_COMBAT/" + "sublist_DTI_B0.txt"];
+	dlmwrite(filename,sub_order','delimiter','')
+
+	filename = ["DATA_BEFORE_COMBAT/" + "connectome_weights_BEFORE_COMBAT_DTI_B0.txt"];
+	dlmwrite(filename,vals_under_diag,'delimiter',' ')
+	clear sub_order vals_under_diag
+
+
+```
+
+
 ```R
 dat <- read.table("connectome_weights_BEFORE_COMBAT_DTI_B0.txt", header = FALSE, sep = " ", dec = ".")
 data <- read.table("DEMO_TABLE_DTI_B0.txt", header = TRUE, sep = "\t", dec = ".")
@@ -28,12 +67,12 @@ write.table(t(data.harmonized[["dat.combat"]]), file="connectome_weights_AFTER_C
 2. Reconstruct connectivity matrices after combat
 
 ```matlab
-% import relevant data
+% import weights
 vals_under_diag_before_combat = importdata('connectome_weights_BEFORE_COMBAT_DTI_B0.txt');
 vals_under_diag_after_combat = importdata('connectome_weights_AFTER_COMBAT_DTI_B0.txt');
 % check
 isequal(size(vals_under_diag_before_combat),size(vals_under_diag_after_combat))
-% set the 0 vals back to 0
+% set the initial 0 vals back to 0
 vals_under_diag_after_combat = vals_under_diag_after_combat.*(vals_under_diag_before_combat>=0.1);
 %isequal(size(vals_under_diag_after_combat), size(vals_under_diag_before_combat))
 vals_under_diag_after_combat = vals_under_diag_after_combat.*(vals_under_diag_after_combat>=0);
@@ -52,11 +91,11 @@ sub_mat(idx_under_diag) = vals_under_diag_after_combat(m,:);
 % MAke it symmetric
 sub_mat = sub_mat'+sub_mat;
 % write outputs as txt
-%filename = ["../data_after_combat/" + sub_order(m) + "_connectome_mat_COMBAT_DTI_B0.txt"];
-%dlmwrite(filename,sub_mat,'delimiter',' ')
+filename = ["../data_after_combat/" + sub_order(m) + "_connectome_mat_COMBAT_DTI_B0.txt"];
+dlmwrite(filename,sub_mat,'delimiter',' ')
 % write outputs as mat
-%filename = ["../data_after_combat/" + sub_order(m) + "_connectome_mat_COMBAT_DTI_B0"];
-%save(filename,'sub_mat')
+filename = ["../data_after_combat/" + sub_order(m) + "_connectome_mat_COMBAT_DTI_B0"];
+save(filename,'sub_mat')
 
 end
 
