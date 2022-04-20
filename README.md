@@ -1,7 +1,7 @@
 # Multisite_Harmoniz_DTI_Networks
 
 
-
+The below code extracts elements from under diagonal of adjacency matrices in vals_under_diag and exports as .txt. It also save matrices after cleaning the diagnonal.
 ```matlab
 mkdir no_diag_matrices_DTI
 mkdir DATA_BEFORE_COMBAT
@@ -12,27 +12,27 @@ matrix_files={matrix_dir_files.name};
 a=rand(90);
 idx_under_diag=find(tril(a,-1));
 for i = 1 : length(matrix_files)
-	i
 	W = importdata(folder_path{i} + "/" +  matrix_files{i});
 	W(isnan(W)) = 0;
 	W(1:size(W,1)+1:end)=0; % clear diagonal
 	% find indices below diag
-	% obtain a vector from the indices
+	% obtain a vector from the indices; store vals_under_diag across scans 
 	vals_under_diag(i,:)=W(idx_under_diag);
+	% save sub_id of this sub
 	sub_order{i} = [matrix_files{i}(5:12)];
 
-% save as txt
+% save mat with diag=0 as txt
 	filename = ["no_diag_matrices_DTI/" + matrix_files{i}(1:12) + "_DTI_B0.txt"];
 	save(filename,'W')
 
-% save as .mat
+% save as mat with diag=0 .mat (can be inserted in Gretna)
 	filename = ["no_diag_matrices_DTI/" + matrix_files{i}(1:12) + "_DTI_B0"];
 	save(filename,'W')
 end;
-
+% save a sublist so we know the correspondence between sub_id and column in the dataframe
 	filename = ["DATA_BEFORE_COMBAT/" + "sublist_DTI_B0.txt"];
 	dlmwrite(filename,sub_order','delimiter','')
-
+% save actual lower diagnonal dataframe
 	filename = ["DATA_BEFORE_COMBAT/" + "connectome_weights_BEFORE_COMBAT_DTI_B0.txt"];
 	dlmwrite(filename,vals_under_diag,'delimiter',' ')
 	clear sub_order vals_under_diag
