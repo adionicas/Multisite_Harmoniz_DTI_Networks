@@ -40,12 +40,14 @@ end;
 
 
 ```
-
+## Run harmonization in R
 
 ```R
+# import
 dat <- read.table("connectome_weights_BEFORE_COMBAT_DTI_B0.txt", header = FALSE, sep = " ", dec = ".")
 data <- read.table("DEMO_TABLE_DTI_B0.txt", header = TRUE, sep = "\t", dec = ".")
 
+# prepare variables
 batch=data$Study_MRI
 age=data$age
 injury=as.factor(data$injury)
@@ -55,17 +57,19 @@ gender <- factor(gender, levels=c("Male","Female"), labels=c(0,1))
 library(matrixStats)
 library(neuroCombat)
 
+# Define matrix used to preserve the variance of group (injury), age and gender
 mod <- model.matrix(~injury+age+gender)
 
 dat=t(dat)
 
+# run actual harmonization
 data.harmonized <- neuroCombat(dat=dat, batch=batch, mod=mod, parametric=TRUE)
 
 write.table(t(data.harmonized[["dat.combat"]]), file="connectome_weights_AFTER_COMBAT_DTI_B0.txt", sep="\t", col.names = F, row.names = F)
 
 ```
 
-2. Reconstruct connectivity matrices after combat
+## 3. Reconstruct connectivity matrices after harmonization
 
 ```matlab
 % import weights
