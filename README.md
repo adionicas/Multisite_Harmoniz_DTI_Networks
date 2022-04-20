@@ -40,7 +40,7 @@ end;
 
 
 ```
-## Run harmonization in R
+## 2. Run harmonization in R
 
 ```R
 # import
