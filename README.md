@@ -1,7 +1,9 @@
 # Multisite_Harmoniz_DTI_Networks
 
 
-## 1. Extract elements below diagonal
+## A. Matrix harmonization
+
+### 1. Extract elements below diagonal
 This step is done with matlab - extracts elements from under diagonal of adjacency matrices in vals_under_diag and exports as .txt across sub and a list of sub_id for refrence. It also save matrices after cleaning the diagnonal.
 ```matlab
 mkdir no_diag_matrices_DTI
@@ -40,7 +42,7 @@ end;
 
 
 ```
-## 2. Run harmonization in R
+### 2. Run harmonization in R
 
 ```R
 # import
@@ -69,7 +71,7 @@ write.table(t(data.harmonized[["dat.combat"]]), file="connectome_weights_AFTER_C
 
 ```
 
-## 3. Reconstruct connectivity matrices after harmonization
+### 3. Reconstruct connectivity matrices after harmonization
 
 ```matlab
 % import weights
@@ -105,3 +107,5 @@ save(filename,'sub_mat')
 end
 
 ```
+
+## B. Parameter harmonization
