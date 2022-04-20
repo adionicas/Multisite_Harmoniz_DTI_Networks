@@ -1,7 +1,8 @@
 # Multisite_Harmoniz_DTI_Networks
 
 
-The below code extracts elements from under diagonal of adjacency matrices in vals_under_diag and exports as .txt. It also save matrices after cleaning the diagnonal.
+## 1. Extract elements below diagonal
+This step is done with matlab - extracts elements from under diagonal of adjacency matrices in vals_under_diag and exports as .txt across sub and a list of sub_id for refrence. It also save matrices after cleaning the diagnonal.
 ```matlab
 mkdir no_diag_matrices_DTI
 mkdir DATA_BEFORE_COMBAT
