@@ -110,3 +110,35 @@ end
 ```
 
 ## B. Parameter harmonization
+
+
+```R
+library(readxl)
+# Import dfata with no combat
+data <- read_excel(file.choose())
+
+# cp orig data to presevre subid for harmonized data (1st column)
+data_after_combat_on_params <- data
+# From replace param vals with nans (will be refilled with harmonized values)
+data_after_combat_on_params[,2:12] <- NA
+
+
+batch=data$Study_MRI
+age=data$age
+injury=as.factor(data$injury)
+gender=as.factor(data$gender)
+gender <- factor(gender, levels=c("Male","Female"), labels=c(0,1))
+
+library(matrixStats)
+library(neuroCombat)
+
+mod <- model.matrix(~injury+age+gender)
+
+for(i in 2:12){
+data.harmonized <- neuroCombat(dat=t(data[,i]), batch=batch, mod=mod, parametric=TRUE, eb=FALSE)
+data_after_combat_on_params[,i] <- t(data.harmonized[["dat.combat"]])}
+
+library("writexl")
+write_xlsx(data_after_combat_on_params,"AAL_ses-B0_global_params_GRETNA_propthr_wei_combat_on_parameters.xlsx")
+
+```
