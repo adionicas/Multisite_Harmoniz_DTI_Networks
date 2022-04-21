@@ -80,11 +80,11 @@ vals_under_diag_after_combat = importdata('connectome_weights_AFTER_COMBAT_DTI_B
 % check
 isequal(size(vals_under_diag_before_combat),size(vals_under_diag_after_combat))
 % set the initial 0 vals back to 0
-vals_under_diag_after_combat = vals_under_diag_after_combat.*(vals_under_diag_before_combat>=0.1);
-%isequal(size(vals_under_diag_after_combat), size(vals_under_diag_before_combat))
-vals_under_diag_after_combat = vals_under_diag_after_combat.*(vals_under_diag_after_combat>=0);
+vals_under_diag_after_combat = vals_under_diag_after_combat.*(vals_under_diag_before_combat>=0);
 
-% Reconstruct into connectivity materices for each sub
+% Reconstruct connectivity materices for each sub
+
+% Define indices under diagonal for a 90 x 90 matrix
 a=rand(90);
 idx_under_diag=find(tril(a,-1));
 
@@ -94,13 +94,14 @@ sub_order = importdata('sublist_DTI_B0.txt');
 for m = 1 : size(vals_under_diag_after_combat,1)
 % Make an empty sub matrix
 sub_mat=zeros(90);
+% Fill it
 sub_mat(idx_under_diag) = vals_under_diag_after_combat(m,:);
-% MAke it symmetric
+% Make it symmetric
 sub_mat = sub_mat'+sub_mat;
-% write outputs as txt
+% Write outputs as txt
 filename = ["../data_after_combat/" + sub_order(m) + "_connectome_mat_COMBAT_DTI_B0.txt"];
 dlmwrite(filename,sub_mat,'delimiter',' ')
-% write outputs as mat
+% Write outputs as mat
 filename = ["../data_after_combat/" + sub_order(m) + "_connectome_mat_COMBAT_DTI_B0"];
 save(filename,'sub_mat')
 
