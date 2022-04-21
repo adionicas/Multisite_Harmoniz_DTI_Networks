@@ -107,7 +107,14 @@ save(filename,'sub_mat')
 
 end
 
+%Carplet plot before-after harmonization
+figure; subplot(1,2,1); imagesc(vals_under_diag_before_combat); caxis([0 1.2]); colorbar; colormap(jet); title('Before COMBAT')
+subplot(1,2,2); imagesc(vals_under_diag_after_combat); caxis([0 1.2]); colorbar; colormap(jet); title('After COMBAT')
+saveas(gcf,'before_after_COMBAT_same_scale.png')
+
+
 ```
+
 
 ## B. Parameter harmonization
 
