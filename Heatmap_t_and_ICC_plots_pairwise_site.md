@@ -333,7 +333,7 @@ ggsave(filename, width = 4.8, height = 4.3, device='png', dpi=700)
 ### Combine t with ICC [bash code]
 
 
-```R
+```bash
 files=`ls | grep ICC| cut -d "." -f 1`
 
 for file in $files; do
