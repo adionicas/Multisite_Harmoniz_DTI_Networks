@@ -1,4 +1,4 @@
-Import data
+### Import data
 
 ```R
 library(readxl)
@@ -29,7 +29,7 @@ ceiling_dec <- function(x, level=1) round(x + 5*10^(-level-1), level)
 
 ```
 
-Generate t heatmap for each harmonization
+### Generate t heatmap for each harmonization
 
 
 ```R
@@ -220,10 +220,10 @@ ggsave(filename, width = 4.8, height = 4.3, device='png', dpi=700)
 ```
 
 
-Make ICC on ptincipal diagonal
+### Make ICC on ptincipal diagonal
 
 
-```
+```R
 library(psych)
 
 for(t in 2:12){
@@ -330,10 +330,10 @@ ggsave(filename, width = 4.8, height = 4.3, device='png', dpi=700)
 ```
 
 
-Combine t with ICC [bash code]
+### Combine t with ICC [bash code]
 
 
-```
+```R
 files=`ls | grep ICC| cut -d "." -f 1`
 
 for file in $files; do
