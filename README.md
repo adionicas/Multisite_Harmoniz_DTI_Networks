@@ -4,7 +4,7 @@
 ## A. Matrix harmonization
 
 ### 1. Extract elements below diagonal
-This step is done with matlab - extracts elements from under diagonal of adjacency matrices in vals_under_diag and exports as .txt across sub and a list of sub_id for refrence. It also save matrices after cleaning the diagnonal.
+This step is done with matlab - extracts elements from under diagonal of adjacency matrices in vals_under_diag and exports as .txt across sub and a list of sub_id for reference. It also saves matrices after cleaning the diagonal.
 ```matlab
 mkdir no_diag_matrices_DTI
 mkdir DATA_BEFORE_COMBAT
@@ -35,7 +35,7 @@ end;
 % save a sublist so we know the correspondence between sub_id and column in the dataframe
 	filename = ["DATA_BEFORE_COMBAT/" + "sublist_DTI_B0.txt"];
 	dlmwrite(filename,sub_order','delimiter','')
-% save actual lower diagnonal dataframe
+% save actual lower diagonal dataframe
 	filename = ["DATA_BEFORE_COMBAT/" + "connectome_weights_BEFORE_COMBAT_DTI_B0.txt"];
 	dlmwrite(filename,vals_under_diag,'delimiter',' ')
 	clear sub_order vals_under_diag
@@ -82,7 +82,7 @@ isequal(size(vals_under_diag_before_combat),size(vals_under_diag_after_combat))
 % set the initial 0 vals back to 0
 vals_under_diag_after_combat = vals_under_diag_after_combat.*(vals_under_diag_before_combat>=0);
 
-% Reconstruct connectivity materices for each sub
+% Reconstruct connectivity matrices for each sub
 
 % Define indices under diagonal for a 90 x 90 matrix
 a=rand(90);
@@ -121,10 +121,10 @@ saveas(gcf,'before_after_COMBAT_same_scale.png')
 
 ```R
 library(readxl)
-# Import dfata with no combat
+# Import data with no combat
 data <- read_excel(file.choose())
 
-# cp orig data to presevre subid for harmonized data (1st column)
+# cp orig data to preserve subid for harmonized data (1st column)
 data_after_combat_on_params <- data
 # From replace param vals with nans (will be refilled with harmonized values)
 data_after_combat_on_params[,2:12] <- NA
@@ -139,13 +139,3 @@ gender <- factor(gender, levels=c("Male","Female"), labels=c(0,1))
 library(matrixStats)
 library(neuroCombat)
 
-mod <- model.matrix(~injury+age+gender)
-
-for(i in 2:12){
-data.harmonized <- neuroCombat(dat=t(data[,i]), batch=batch, mod=mod, parametric=TRUE, eb=FALSE)
-data_after_combat_on_params[,i] <- t(data.harmonized[["dat.combat"]])}
-
-library("writexl")
-write_xlsx(data_after_combat_on_params,"AAL_ses-B0_global_params_GRETNA_propthr_wei_combat_on_parameters.xlsx")
-
-```
